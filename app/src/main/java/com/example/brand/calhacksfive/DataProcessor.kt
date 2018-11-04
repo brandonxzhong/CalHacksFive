@@ -5,6 +5,15 @@ package com.example.brand.calhacksfive
 // TODO If points overlap, must offset each other and not overlap
 class DataProcessor {
     private val storage = HashMap<String, List<Coordinate>>()
+    private val colorstore = HashMap<String, Float>()
+    private val keys = mutableListOf<String>()
+
+    fun setColor(location : String, color : Float) {
+        colorstore[location] = color
+    }
+    fun getColor(location : String) : Float {
+        return colorstore[location] as Float
+    }
     /*Returns coordinates at given location if available, empty string if not*/
     fun getCoordinates(place : String) : List<Coordinate> {
         if (storage.contains(place)) {
@@ -13,13 +22,16 @@ class DataProcessor {
             return mutableListOf()
         }
     }
-    /*Returns all strings available in the data processor*/
-    fun getLocations() : List<String> {
-        var list : List<String> = mutableListOf()
-        for (x in storage.keys) {
-            list.plus(x)
+    fun getAllCoordinates() : List<Coordinate> {
+        var list = mutableListOf<Coordinate>()
+        for (x in getLocations()) {
+            list.plus(storage.get(x) as List<Coordinate>)
         }
         return list
+    }
+    /*Returns all strings available in the data processor*/
+    fun getLocations() : List<String> {
+        return keys
     }
     /*Check if storage contains location*/
     fun containsLocation(place : String) : Boolean {
@@ -37,6 +49,7 @@ class DataProcessor {
             }
             storage[place] = temp
         } else {
+            keys.add(place)
             storage[place] = mutableListOf(coords)
         }
     }
@@ -53,6 +66,7 @@ class DataProcessor {
             }
             storage[place] = temp
         } else {
+            keys.add(place)
             storage[place] = coords
         }
     }
@@ -66,6 +80,7 @@ class DataProcessor {
             }
             if (temp.isEmpty()) {
                 removeLocation(place)
+                keys.remove(place)
             } else {
                 storage[place] = temp
             }
@@ -82,6 +97,7 @@ class DataProcessor {
             }
             if (temp.isEmpty()) {
                 removeLocation(place)
+                keys.remove(place)
             } else {
                 storage[place] = temp
             }
@@ -92,13 +108,15 @@ class DataProcessor {
     fun removeLocation(place : String) {
         if (storage.contains(place)) {
             storage.remove(place)
+            keys.remove(place)
         }
     }
 }
 
-class Coordinate (xValue : Double, yValue : Double){
+class Coordinate (xValue : Double, yValue : Double, description : String = "No extra information available."){
     private var xval = xValue
     private var yval = yValue
+    private var descrip = description
 
     fun getxValue() : Double {
         return xval
@@ -108,11 +126,19 @@ class Coordinate (xValue : Double, yValue : Double){
         return yval
     }
 
+    fun getDescription() : String {
+        return descrip
+    }
+
     fun setxValue(inputX : Double) {
         xval = inputX
     }
 
     fun setyValue(inputY : Double) {
-       yval = inputY
+        yval = inputY
+    }
+
+    fun setDescription(newdescrip : String) {
+        descrip = newdescrip
     }
 }
