@@ -9,7 +9,11 @@ class TestDataProcessor {
         var string1 = "House"
         var string2 = "School"
         var string3 = "Market"
-        stuff.addLocation(string1)
+        stuff.addLocation(string1, coord1)
+        stuff.addLocation(string2, mutableListOf(coord1, coord2, coord3))
+        stuff.removeLocation(string1)
+        stuff.getCoordinates(string2)
+        stuff.getCoordinates(string1)
     }
 
 }
