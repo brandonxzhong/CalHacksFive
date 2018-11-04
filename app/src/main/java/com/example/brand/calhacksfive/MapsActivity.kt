@@ -4,11 +4,17 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.FragmentActivity
 import android.util.Log
+import android.view.View
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.*
+import android.widget.CheckBox
+import android.widget.CompoundButton.OnCheckedChangeListener
+import android.app.Activity
+
+
 
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -24,6 +30,40 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val printer = findViewById(R.id.radioPopular) as CheckBox
+        printer.setOnCheckedChangeListener{
+            buttonView, isChecked ->
+            if (isChecked) {
+                print(isChecked)
+            }
+        }
+
+        val vending = findViewById(R.id.radioPopular) as CheckBox
+        printer.setOnCheckedChangeListener{
+            buttonView, isChecked ->
+            if (isChecked) {
+                print(isChecked)
+            }
+        }
+
+        val restroom = findViewById(R.id.radioPopular) as CheckBox
+        printer.setOnCheckedChangeListener{
+            buttonView, isChecked ->
+            if (isChecked) {
+                print(isChecked)
+            }
+        }
+
+        val microwave = findViewById(R.id.radioPopular) as CheckBox
+        printer.setOnCheckedChangeListener{
+            buttonView, isChecked ->
+            if (isChecked) {
+                print(isChecked)
+            }
+        }
+
+
     }
 
     /**
@@ -113,6 +153,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(37.8719, -122.2585),15.5f,0.0f,80.0f)))
         mMap.setLatLngBoundsForCameraTarget(BerkeleyBounds)
         mMap.setMinZoomPreference(15.5f)
+
 
 
     }
