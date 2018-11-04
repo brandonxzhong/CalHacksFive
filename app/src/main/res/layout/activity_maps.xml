@@ -24,7 +24,7 @@ tools:context=".MapsActivity" >
         android:background="#80000000"
         android:padding="4dp">
 
-    <RadioButton
+    <CheckBox
         android:id="@+id/radioPopular"
         android:layout_width="0dp"
         android:layout_height="match_parent"
@@ -38,8 +38,8 @@ tools:context=".MapsActivity" >
         android:layout_height="match_parent"
         android:background="#aaa" />
 
-    <RadioButton
-        android:id="@+id/radioAZ"
+    <CheckBox
+        android:id="@+id/vending"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical"
@@ -52,8 +52,8 @@ tools:context=".MapsActivity" >
         android:layout_height="match_parent"
         android:background="#aaa" />
 
-    <RadioButton
-        android:id="@+id/radioCategory"
+    <CheckBox
+        android:id="@+id/restrooms"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical"
@@ -66,12 +66,12 @@ tools:context=".MapsActivity" >
         android:layout_height="match_parent"
         android:background="#aaa" />
 
-    <RadioButton
-        android:id="@+id/radioNearBy"
+    <CheckBox
+        android:id="@+id/microwaves"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical"
-        android:text="Elevators"
+        android:text="Microwaves"
         android:layout_weight="1"/>
 
 </RadioGroup>
