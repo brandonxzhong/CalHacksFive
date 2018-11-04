@@ -8,6 +8,15 @@ class DataProcessor {
     private val colorstore = HashMap<String, Float>()
     private val keys = mutableListOf<String>()
 
+    fun checkCoordinates() {
+        for (x in getAllCoordinates()) {
+            if (getAllCoordinates().contains(x)) {
+                x.setxValue(x.getxValue() + .05)
+                x.setyValue(x.getyValue() + .05)
+            }
+        }
+    }
+
     fun setColor(location : String, color : Float) {
         colorstore[location] = color
     }
@@ -113,10 +122,18 @@ class DataProcessor {
     }
 }
 
-class Coordinate (xValue : Double, yValue : Double, description : String = "No extra information available."){
+class Coordinate (xValue : Double, yValue : Double, description : String = "No extra information available.") : Comparable<Coordinate>{
     private var xval = xValue
     private var yval = yValue
     private var descrip = description
+
+    override fun compareTo(other: Coordinate) : Int {
+        if (this.xval == other.xval && this.xval == other.yval) {
+            return 1
+        } else {
+            return -1
+        }
+    }
 
     fun getxValue() : Double {
         return xval
