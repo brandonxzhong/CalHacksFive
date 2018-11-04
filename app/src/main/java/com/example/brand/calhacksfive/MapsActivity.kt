@@ -8,12 +8,19 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.LatLngBounds
+
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,11 +41,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
+
+        val BerkeleyBounds = LatLngBounds(
+                LatLng(37.87, -122.2595), LatLng(37.8719, -122.25))
+
         mMap = googleMap
         Log.d("MapsActivity", "Reached onMapReady");
         // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val berkeley = LatLng(37.8716, -122.2727)
+        val moffit = LatLng(37.8726, -122.2607)
+        mMap.addMarker(MarkerOptions().position(berkeley).title("Marker in Sydney"))
+        mMap.addMarker(MarkerOptions().position(moffit).title("Moffit Library")
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
+                .snippet("test"))
+        mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(37.8719, -122.2585),15.5f,0.0f,80.0f)))
+        mMap.setLatLngBoundsForCameraTarget(BerkeleyBounds)
+        mMap.setMinZoomPreference(15.5f)
     }
 }
