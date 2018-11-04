@@ -25,7 +25,7 @@ tools:context=".MapsActivity" >
         android:padding="4dp">
 
     <CheckBox
-        android:id="@+id/radioPopular"
+        android:id="@+id/printers"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:text="Printers"
@@ -57,7 +57,7 @@ tools:context=".MapsActivity" >
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:gravity="center_horizontal|center_vertical"
-        android:text="Restroom"
+        android:text="Restrooms"
         android:layout_weight="1"/>
 
     <View

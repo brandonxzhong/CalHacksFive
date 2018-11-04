@@ -13,15 +13,14 @@ import com.google.android.gms.maps.model.*
 import android.widget.CheckBox
 import android.widget.CompoundButton.OnCheckedChangeListener
 import android.app.Activity
+import android.widget.CompoundButton
 
 
-
-
-class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
+class MapsActivity : AppCompatActivity(), OnMapReadyCallback, OnCheckedChangeListener{
 
     private lateinit var mMap: GoogleMap
-
-
+    private var dataprocessor = DataProcessor()
+    private var activekeys = HashMap<String, Boolean>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,41 +30,26 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
-        val printer = findViewById(R.id.radioPopular) as CheckBox
-        printer.setOnCheckedChangeListener{
-            buttonView, isChecked ->
-            if (isChecked) {
-                print(isChecked)
-            }
-        }
+        val printer : CheckBox = findViewById(R.id.printers)
+        printer.setOnCheckedChangeListener(this)
 
-        val vending = findViewById(R.id.radioPopular) as CheckBox
-        printer.setOnCheckedChangeListener{
-            buttonView, isChecked ->
-            if (isChecked) {
-                print(isChecked)
-            }
-        }
+        val vending : CheckBox = findViewById(R.id.vending)
+        vending.setOnCheckedChangeListener(this)
 
-        val restroom = findViewById(R.id.radioPopular) as CheckBox
-        printer.setOnCheckedChangeListener{
-            buttonView, isChecked ->
-            if (isChecked) {
-                print(isChecked)
-            }
-        }
+        val restroom : CheckBox= findViewById(R.id.restrooms)
+        restroom.setOnCheckedChangeListener(this)
 
-        val microwave = findViewById(R.id.radioPopular) as CheckBox
-        printer.setOnCheckedChangeListener{
-            buttonView, isChecked ->
-            if (isChecked) {
-                print(isChecked)
-            }
-        }
-
+        val microwave : CheckBox = findViewById(R.id.microwaves)
+        microwave.setOnCheckedChangeListener(this)
 
     }
 
+    override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
+        buttonView as CompoundButton
+        var key : String = buttonView.text as String
+        updateActiveKey(key, isChecked)
+        updateMap()
+    }
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -77,20 +61,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      */
     // TODO Color code the points, and attach them to a OnMarkerClickListener
     override fun onMapReady(googleMap: GoogleMap) {
-
-        val BerkeleyBounds = LatLngBounds(
-                LatLng(37.87, -122.2595), LatLng(37.8719, -122.25))
-
         mMap = googleMap
-        Log.d("MapsActivity", "Reached onMapReady");
-        // Add a marker in Sydney and move the camera
-        val berkeley = LatLng(37.8716, -122.2727)
-        val moffit = LatLng(37.8726, -122.2607)
+        initPseudoData()
+        initMapStructure()
+        initActiveKeys()
+        initFullMap()
+
+    }
+
+    fun initPseudoData() {
 
         val string1 = "Printers"
         val string2 = "Microwaves"
         val string3 = "Vending Machines"
-        val string4 = "Bathrooms"
+        val string4 = "Restrooms"
         val descrip4 = "Located on the second floor, usually clean and quiet"
         val descrip41 = "Costs 15 cents per print"
         val descrip3 = "Out of Goldfish :("
@@ -106,13 +90,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val coord33 = Coordinate(37.8749, -122.2553)
         val coord12 = Coordinate(37.8722, -122.2589, descrip4)
         val coord45 = Coordinate(37.8694, -122.2623, descrip41)
-        val coord21 = Coordinate(37.8715, -122.2687, descrip2)
+        val coord21 = Coordinate(37.8715, -122.2587, descrip2)
+        val coord22 = Coordinate(37.8710, -122.2550, descrip2)
         val color1 = BitmapDescriptorFactory.HUE_ORANGE
         val color2 = BitmapDescriptorFactory.HUE_GREEN
         val color3 = BitmapDescriptorFactory.HUE_MAGENTA
         val color4 = BitmapDescriptorFactory.HUE_YELLOW
-
-        var dataprocessor = DataProcessor()
 
         dataprocessor.setColor(string1, color1)
         dataprocessor.setColor(string2, color2)
@@ -121,18 +104,19 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         var listofstrings = mutableListOf(string1, string2, string3, string4)
         var listofprinters : List<Coordinate> = mutableListOf(coord41, coord42, coord43, coord44, coord45)
-        var listofmicrowaves : List<Coordinate> = mutableListOf(coord21)
+        var listofmicrowaves : List<Coordinate> = mutableListOf(coord21, coord22)
         var listofvendingmachines : List<Coordinate> = mutableListOf(coord31, coord32, coord33)
-        var listofbathrooms : List<Coordinate> = mutableListOf(coord11, coord12)
+        var listofrestrooms : List<Coordinate> = mutableListOf(coord11, coord12)
 
         dataprocessor.addLocation(string1, listofprinters)
         dataprocessor.addLocation(string2, listofmicrowaves)
         dataprocessor.addLocation(string3, listofvendingmachines)
-        dataprocessor.addLocation(string4, listofbathrooms)
+        dataprocessor.addLocation(string4, listofrestrooms)
 
-        var strings = dataprocessor.getLocations()
+    }
 
-        for (f in strings) {
+    fun initFullMap() {
+        for (f in dataprocessor.getLocations()) {
             var currentLocations = dataprocessor.getCoordinates(f)
             for (g in currentLocations) {
                 var currColor = dataprocessor.getColor(f)
@@ -143,6 +127,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
                 mMap.addMarker(MarkerOptions().position(currCoordinate).title(f).icon(BitmapDescriptorFactory.defaultMarker(currColor)).snippet(currDescrip))
             }
         }
+    }
+
+    fun initMapStructure() {
+        val BerkeleyBounds = LatLngBounds(
+                LatLng(37.87, -122.2595), LatLng(37.8719, -122.25))
+
+        val berkeley = LatLng(37.8716, -122.2727)
+        val moffit = LatLng(37.8726, -122.2607)
+
+        Log.d("MapsActivity", "Reached onMapReady");
+        // Add a marker in Sydney and move the camera
+
 
         mMap.addMarker(MarkerOptions().position(berkeley).title("Marker in Sydney"))
         mMap.addMarker(MarkerOptions().position(moffit).title("Moffit Library")
@@ -153,8 +149,33 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mMap.moveCamera(CameraUpdateFactory.newCameraPosition(CameraPosition(LatLng(37.8719, -122.2585),15.5f,0.0f,80.0f)))
         mMap.setLatLngBoundsForCameraTarget(BerkeleyBounds)
         mMap.setMinZoomPreference(15.5f)
+    }
 
+    fun initActiveKeys() {
+        for (x in dataprocessor.getLocations()) {
+            activekeys[x] = false
+        }
+    }
 
+    fun updateActiveKey(key : String, bool : Boolean) {
+        activekeys[key] = bool
+    }
 
+    //TODO Use of clear is absolute garbage. Look into GoogleMap to see if there's a direct way to "remove" Marker.
+    fun updateMap() {
+        mMap.clear()
+        for (f in activekeys.keys) {
+            if (activekeys[f] as Boolean) {
+                var currentLocations = dataprocessor.getCoordinates(f)
+                for (g in currentLocations) {
+                    var currColor = dataprocessor.getColor(f)
+                    var currDescrip = g.getDescription()
+                    var xVal = g.getxValue()
+                    var yVal = g.getyValue()
+                    var currCoordinate = LatLng(xVal, yVal)
+                    mMap.addMarker(MarkerOptions().position(currCoordinate).title(f).icon(BitmapDescriptorFactory.defaultMarker(currColor)).snippet(currDescrip))
+                }
+            }
+        }
     }
 }

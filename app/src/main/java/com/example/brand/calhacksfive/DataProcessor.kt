@@ -2,20 +2,11 @@ package com.example.brand.calhacksfive
 // TODO Add list support for Data Processor operations
 // TODO Make sure repetitions do not get added into the lists
 // TODO If size = 0. remove it
-// TODO If points overlap, must offset each other and not overlap
+// TODO If points overlap, must offset each other and not overlap by a random offset; offset shouldn't overlap again
 class DataProcessor {
     private val storage = HashMap<String, List<Coordinate>>()
     private val colorstore = HashMap<String, Float>()
     private val keys = mutableListOf<String>()
-
-    fun checkCoordinates() {
-        for (x in getAllCoordinates()) {
-            if (getAllCoordinates().contains(x)) {
-                x.setxValue(x.getxValue() + .05)
-                x.setyValue(x.getyValue() + .05)
-            }
-        }
-    }
 
     fun setColor(location : String, color : Float) {
         colorstore[location] = color
